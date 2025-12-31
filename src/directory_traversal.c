@@ -21,16 +21,24 @@ void traverseDirectory(FileList *result
 
   while ( (entry=readdir(dir)) != NULL){
 
+    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+      continue;
+    }
+
     int matches=TRUE;
 
     for (int i=0; i<filterCount && matches; i++) {
       matches=filters[i](entry, argument);
     }
 
+    char fullPath[PATH_MAX];
+    snprintf(fullPath, sizeof(fullPath), "%s/%s",startPath,entry->d_name);
+
     if(matches){
-      char fullPath[PATH_MAX];
-      snprintf(fullPath, sizeof(fullPath), "%s/%s",startPath,entry->d_name);
       addFile(result, fullPath);
+    }
+    if(entry->d_type == DT_DIR && argument->recursive){
+      traverseDirectory(result, fullPath, filters, filterCount, argument);
     }
   }
   closedir(dir);

@@ -4,4 +4,5 @@
 
 typedef int (*FilterFunc)(const struct dirent *entry, const Argument *argument);
 
+
 #endif

@@ -19,6 +19,7 @@ void printArguments(int argc,char **argv){
   printf("namePattern: %s\n",argument.namePattern);
   printf("type: %c\n",argument.type);
   printf("filterCondition: %s\n",argument.filterCondition);
+  printf("recursive: %d\n", argument.recursive);
 }
 
 void printTraverseDirectory(int argc, char **argv){
