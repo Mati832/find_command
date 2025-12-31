@@ -5,10 +5,30 @@
 
 void printArguments(int argc, char **argv);
 void printTraverseDirectory(int argc, char **argv);
+void printList(FileList *list);
 
 int main(int argc, char **argv)
 {
-  printTraverseDirectory(argc, argv);
+  FileList result;
+  initList(&result);
+  
+  Argument arg;
+  parseArguments(&arg, argc, argv);
+
+  FilterFunc activeFilters[5];
+  int filterCount = 0;
+
+  if (arg.namePattern != NULL) {
+    activeFilters[filterCount] = nameFilter;
+    filterCount++;
+  }
+  if (arg.type != '\0') {
+    activeFilters[filterCount] = typeFilter;
+    filterCount++;
+  }
+  
+  traverseDirectory(&result, arg.startPath, activeFilters, filterCount, &arg);
+  printList(&result); 
   return 0;
 }
 
@@ -21,22 +41,12 @@ void printArguments(int argc,char **argv){
   printf("filterCondition: %s\n",argument.filterCondition);
   printf("recursive: %d\n", argument.recursive);
 }
+void printList(FileList *list){
 
-void printTraverseDirectory(int argc, char **argv){
-  Argument argument;
-  parseArguments(&argument, argc, argv);
-  FileList result;
-  initList(&result);
-  traverseDirectory(&result
-                    , argument.startPath
-                    ,NULL
-                    ,0
-                    ,&argument);
-
-  FileNode *current=result.start;
+  FileNode *current=list->start;
   while (current!=NULL) {
     printf("%s\n",current->absolutePath);
     current=current->next;
   }
-  freeList(&result);
+  freeList(list);
 }

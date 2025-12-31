@@ -7,7 +7,7 @@
 void parseArguments(Argument *argument, int argc, char **argv){
   argument->startPath = ".";
   argument->namePattern = NULL;
-  argument->type = ' ';
+  argument->type = '\0';
   argument->filterCondition = NULL;
   argument->recursive = FALSE;
 
