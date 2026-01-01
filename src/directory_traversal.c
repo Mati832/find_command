@@ -1,8 +1,9 @@
-#include <dirent.h>
+
+
+#include "../include/directory_traversal.h"
 #include "../include/file_list.h"
-#include "../include/arguments.h"
-#include "../include/filter.h"
-#include "../include/thread_queue.h"
+
+#include <dirent.h>
 #include <limits.h>
 #include <stdio.h>
 

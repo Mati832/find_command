@@ -1,8 +1,8 @@
 #include "../include/file_list.h"
+
+
 #include <stdlib.h>
 #include <string.h>
-#include <semaphore.h>
-
 
 void initList(FileList *list){
   list->start=NULL;
@@ -12,7 +12,7 @@ void initList(FileList *list){
 }
 
 Node* addFile(FileList *list, const char *fullPath, NodeType type){
-//todo thread safe
+
   Node *newNode = malloc(sizeof(Node));
   
   

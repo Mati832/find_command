@@ -1,8 +1,11 @@
-#include "../include/arguments.h"
-#include <string.h>
 
 #define TRUE 1
 #define FALSE 0
+
+#include "../include/arguments.h"
+
+#include <string.h>
+
 
 void parseArguments(Argument *argument, int argc, char **argv){
   argument->startPath = ".";

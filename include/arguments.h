@@ -3,6 +3,7 @@
 #define arguments
 
 
+
 typedef struct{
   char *startPath;
   char *namePattern;

@@ -2,9 +2,9 @@
 #define traverse_directory
 
 #include "arguments.h"
-#include "file_list.h"
 #include "filter.h"
 #include "thread_queue.h"
+
 
 void traverseDirectory(FileList *result
                         ,const char *startPath

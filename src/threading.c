@@ -1,11 +1,9 @@
 
 #define TRUE 1
 
-#include "../include/thread_queue.h"
-#include "../include/traverse_directory.h"
-#include "../include/filter.h"
-#include "../include/arguments.h"
-#include "stdlib.h"
+#include "../include/directory_traversal.h"
+#include <stdlib.h>
+
 
 void worker(TaskQueue *queue, FilterFunc filters[], int filterCount, Argument *argument){
   while (TRUE) {

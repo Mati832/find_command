@@ -1,6 +1,6 @@
 #include "../include/arguments.h"
 #include "../include/file_list.h"
-#include "../include/traverse_directory.h"
+#include "../include/directory_traversal.h"
 #include "../include/thread_queue.h"
 #include "../include/threading.h"
 #include <stdio.h>

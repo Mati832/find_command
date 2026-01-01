@@ -1,6 +1,9 @@
 #ifndef result_list
 #define result_list
+
+
 #include <semaphore.h>
+
 
 typedef enum {
   NODE_FILE,

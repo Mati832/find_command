@@ -4,6 +4,7 @@
 #include "arguments.h"
 #include <dirent.h>
 
+
 typedef int (*FilterFunc)(const struct dirent *entry, const Argument *argument);
 
 int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCount, const Argument *argument);

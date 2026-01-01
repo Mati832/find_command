@@ -1,7 +1,9 @@
-#include <dirent.h>
+
+#include "../include/filter.h"
+
 #include <fnmatch.h>
 #include <string.h>
-#include "../include/filter.h"
+
 #define TRUE 1
 #define FALSE 0
 

@@ -1,7 +1,9 @@
-#include <semaphore.h>
+
 #include "../include/thread_queue.h"
 #include <stdlib.h>
 #include <string.h>
+
+
 #define TRUE 1
 #define FALSE 0
 
