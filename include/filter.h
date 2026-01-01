@@ -2,7 +2,7 @@
 #define filter
 
 #include "arguments.h"
-
+#include <dirent.h>
 
 typedef int (*FilterFunc)(const struct dirent *entry, const Argument *argument);
 

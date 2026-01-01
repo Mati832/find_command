@@ -1,13 +1,14 @@
 #include "../include/file_list.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include <semaphore.h>
 
 
 void initList(FileList *list){
   list->start=NULL;
   list->end=NULL;
   list->count=0;
+  sem_init(&list->mutex, 0, 1);
 }
 
 Node* addFile(FileList *list, const char *fullPath, NodeType type){
@@ -25,6 +26,7 @@ Node* addFile(FileList *list, const char *fullPath, NodeType type){
     initList(newNode->content);
   }
 
+  sem_wait(&list->mutex);
   if(!list->start){
     list->start=newNode;
     list->end=newNode;
@@ -34,6 +36,7 @@ Node* addFile(FileList *list, const char *fullPath, NodeType type){
     list->end=newNode;
   }
   list->count++;
+  sem_post(&list->mutex);
   return newNode;
 }
 
@@ -55,4 +58,5 @@ void freeList(FileList *list){
   list->start=NULL;
   list->end=NULL;
   list->count=0;
+  sem_destroy(&list->mutex);
 }

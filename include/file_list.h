@@ -1,5 +1,6 @@
 #ifndef result_list
 #define result_list
+#include <semaphore.h>
 
 typedef enum {
   NODE_FILE,
@@ -19,6 +20,7 @@ typedef struct Node{
 typedef struct FileList{
   Node *start;
   Node *end;
+  sem_t mutex;
   int count;
 }FileList;
 
