@@ -1,11 +1,14 @@
 #include "../include/arguments.h"
 #include "../include/file_list.h"
 #include "../include/traverse_directory.h"
+#include "../include/thread_queue.h"
+#include "../include/threading.h"
 #include <stdio.h>
 
 void printArguments(int argc, char **argv);
 void printTraverseDirectory(int argc, char **argv);
 void printList(FileList *list);
+void printNodes(Node *current);
 
 int main(int argc, char **argv)
 {
@@ -26,8 +29,10 @@ int main(int argc, char **argv)
     activeFilters[filterCount] = typeFilter;
     filterCount++;
   }
-  
-  traverseDirectory(&result, arg.startPath, activeFilters, filterCount, &arg);
+  TaskQueue queue;
+  initQueue(&queue);
+  pushTask(&queue, arg.startPath, &result);
+  worker(&queue, activeFilters, filterCount, &arg);
   printList(&result); 
   return 0;
 }
@@ -43,10 +48,16 @@ void printArguments(int argc,char **argv){
 }
 void printList(FileList *list){
 
-  FileNode *current=list->start;
+  printNodes(list->start);
+  freeList(list);
+}
+void printNodes(Node *current){
+
   while (current!=NULL) {
     printf("%s\n",current->absolutePath);
+    if(current->type==NODE_DIR){
+      printNodes(current->content->start);
+    }
     current=current->next;
   }
-  freeList(list);
 }

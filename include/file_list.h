@@ -1,19 +1,29 @@
 #ifndef result_list
 #define result_list
 
-typedef struct FileNode{
-  char *absolutePath;
-  struct FileNode *next;
-}FileNode;
+typedef enum {
+  NODE_FILE,
+  NODE_DIR
+} NodeType;
 
-typedef struct{
-  FileNode *start;
-  FileNode *end;
+struct FileList;
+
+typedef struct Node{
+  char *absolutePath;
+  NodeType type;
+  struct Node *next;
+
+  struct FileList *content;
+}Node;
+
+typedef struct FileList{
+  Node *start;
+  Node *end;
   int count;
 }FileList;
 
 void initList(FileList *list);
-void addFile(FileList *list, const char *fullPath);
+Node* addFile(FileList *list, const char *fullPath, NodeType type);
 void freeList(FileList *list);
 
 #endif

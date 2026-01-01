@@ -1,7 +1,6 @@
 #include "../include/file_list.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 
 
@@ -11,21 +10,20 @@ void initList(FileList *list){
   list->count=0;
 }
 
-void addFile(FileList *list, const char *fullPath){
-
-  FileNode *newNode = malloc(sizeof(FileNode));
-  if(!newNode){
-    perror("Error at malloc FileNode");
-    return;
-  }
-
+Node* addFile(FileList *list, const char *fullPath, NodeType type){
+//todo thread safe
+  Node *newNode = malloc(sizeof(Node));
+  
+  
   newNode->absolutePath= strdup(fullPath);
-  if(!newNode->absolutePath){
-    free(newNode);
-    return;
-  }
-
+  newNode->type=type;
   newNode->next=NULL;
+  newNode->content = NULL;
+
+  if(type == NODE_DIR){
+    newNode->content = malloc(sizeof(FileList));
+    initList(newNode->content);
+  }
 
   if(!list->start){
     list->start=newNode;
@@ -36,13 +34,19 @@ void addFile(FileList *list, const char *fullPath){
     list->end=newNode;
   }
   list->count++;
+  return newNode;
 }
+
 void freeList(FileList *list){
 
-  FileNode *current=list->start;
+  Node *current=list->start;
 
   while(current!=NULL){
-    FileNode *temp=current->next;
+    if(current->type == NODE_DIR){
+      freeList(current->content);
+      free(current->content);
+    }
+    Node *temp=current->next;
     free(current->absolutePath);
     free(current);
     current=temp;
