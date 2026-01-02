@@ -5,11 +5,10 @@
 #include "../include/threading.h"
 #include <pthread.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 void printArguments(int argc, char **argv);
-void printTraverseDirectory(int argc, char **argv);
-void printList(FileList *list);
-void printNodes(Node *current);
 
 int main(int argc, char **argv)
 {
@@ -26,7 +25,21 @@ int main(int argc, char **argv)
   
   TaskQueue queue;
   initQueue(&queue);
-  pushTask(&queue, arg.startPath, &result);
+
+  if (!isatty(STDIN_FILENO)) {
+    char startPath[PATH_MAX];
+    while (fgets(startPath, sizeof(startPath), stdin)) {
+      int index=strcspn(startPath, "\n");
+      startPath[index] = '\0';
+
+      if (strlen(startPath) > 0) {
+        pushTask(&queue, startPath, &result);
+      }
+    }
+  }
+  else{
+    pushTask(&queue, arg.startPath, &result);
+  }
   
   WorkerArgument work;
   work.queue=&queue;
@@ -61,19 +74,4 @@ void printArguments(int argc,char **argv){
   printf("type: %c\n",argument.type);
   printf("filterCondition: %s\n",argument.filterCondition);
   printf("recursive: %d\n", argument.recursive);
-}
-void printList(FileList *list){
-
-  printNodes(list->start);
-  freeList(list);
-}
-void printNodes(Node *current){
-
-  while (current!=NULL) {
-    printf("%s\n",current->absolutePath);
-    if(current->type==NODE_DIR){
-      printNodes(current->content->start);
-    }
-    current=current->next;
-  }
 }

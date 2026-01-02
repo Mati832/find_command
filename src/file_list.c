@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void initList(FileList *list){
   list->start=NULL;
@@ -59,4 +60,13 @@ void freeList(FileList *list){
   list->end=NULL;
   list->count=0;
   sem_destroy(&list->mutex);
+}
+
+void printList(FileList *list){
+  Node *current = list->start;
+  while(current){
+    printf("%s\n", current->absolutePath);
+    if(current->type == NODE_DIR) printList(current->content);
+    current=current->next;
+  }
 }

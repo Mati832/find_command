@@ -28,7 +28,11 @@ typedef struct FileList{
 }FileList;
 
 void initList(FileList *list);
+
 Node* addFile(FileList *list, const char *fullPath, NodeType type);
+
 void freeList(FileList *list);
+
+void printList(FileList *list);
 
 #endif
