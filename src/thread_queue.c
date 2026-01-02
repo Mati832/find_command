@@ -2,6 +2,7 @@
 #include "../include/thread_queue.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 
 #define TRUE 1
@@ -18,9 +19,22 @@ void initQueue(TaskQueue *queue){
 void pushTask(TaskQueue *queue, char *directory, FileList *target){
   
   Task *newTask=malloc(sizeof(Task));
+  if(newTask==NULL){
+    perror("Error: Memory could not be allocated");
+    exit(EXIT_FAILURE);
+  }
 
   newTask->next=NULL;
-  newTask->directory = (directory != NULL) ? strdup(directory) : NULL;
+
+  if(directory!=NULL){
+    newTask->directory = strdup(directory);
+    if(newTask->directory==NULL){
+      perror("Error: Memory could not be allocated");
+      exit(EXIT_FAILURE);
+    }
+  }else{
+    newTask->directory=NULL;
+  }
   newTask->targetList = target;
 
   sem_wait(&queue->mutex);

@@ -15,9 +15,15 @@ void initList(FileList *list){
 Node* addFile(FileList *list, const char *fullPath, NodeType type){
 
   Node *newNode = malloc(sizeof(Node));
-  
-  
+  if(newNode == NULL){
+    perror("Error: Memory could not be allocated");
+    exit(EXIT_FAILURE);
+  } 
   newNode->absolutePath= strdup(fullPath);
+  if(newNode->absolutePath == NULL){
+    perror("Error: Memory could not be allocated");
+    exit(EXIT_FAILURE);
+  }
   newNode->type=type;
   newNode->next=NULL;
   newNode->content = NULL;

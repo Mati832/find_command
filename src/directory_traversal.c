@@ -6,7 +6,8 @@
 #include <dirent.h>
 #include <limits.h>
 #include <stdio.h>
-
+#include <string.h>
+#include <errno.h>
 #define TRUE 1
 
 
@@ -19,7 +20,12 @@ void traverseDirectory(FileList *result
 
   struct dirent *entry;
   DIR *dir = opendir(startPath);
-  if(!dir) return;
+  if(!dir){
+    
+    fprintf(stderr, "Could not open directory '%s': %s\n", 
+            startPath, strerror(errno));
+    return;
+  }
 
   while ( (entry=readdir(dir)) != NULL){
 
