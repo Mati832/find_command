@@ -7,7 +7,9 @@
 
 typedef int (*FilterFunc)(const struct dirent *entry, const Argument *argument);
 
-int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCount, const Argument *argument);
+int initFilter(FilterFunc filters[], Argument *arg);
+
+  int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCount, const Argument *argument);
 
 int typeFilter(const struct dirent *entry, const Argument *argument);
 

@@ -31,4 +31,6 @@ void threadStoppedWorking(TaskQueue *queue);
 
 void threadStartedWorking(TaskQueue *queue);
 
+void freeQueue(TaskQueue *queue);
+
 #endif

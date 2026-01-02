@@ -7,7 +7,21 @@
 #define TRUE 1
 #define FALSE 0
 
+//only inits lambda-able filter
+int initFilter(FilterFunc filters[], Argument *arg){
+  int filterCount = 0;
 
+  if (arg->namePattern != NULL) {
+    filters[filterCount] = nameFilter;
+    filterCount++;
+  }
+  if (arg->type != '\0') {
+    filters[filterCount] = typeFilter;
+    filterCount++;
+  }
+  return filterCount;
+}
+//only applies lambda-able filter
 int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCount, const Argument *argument){
 
   int matches=TRUE;
@@ -18,6 +32,7 @@ int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCoun
   return matches;
 }
 
+//lambda-able
 int typeFilter(const struct dirent *entry, const Argument *argument) {
     if (argument->type == 'd' && entry->d_type == DT_DIR) {
         return TRUE;
@@ -27,7 +42,7 @@ int typeFilter(const struct dirent *entry, const Argument *argument) {
     }
     return FALSE;
 }
-
+//lambda-able
 int nameFilter(const struct dirent *entry, const Argument *argument) {
     if (fnmatch(argument->namePattern, entry->d_name, 0) == 0) {
         return TRUE;
@@ -35,8 +50,8 @@ int nameFilter(const struct dirent *entry, const Argument *argument) {
 
     return FALSE;
 }
-
-int dotFilter(const struct dirent *entry){//can not be used as lambda
+//not lambda-able
+int dotFilter(const struct dirent *entry){
   if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
     return TRUE;
   }

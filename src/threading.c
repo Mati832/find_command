@@ -1,11 +1,17 @@
 
 #define TRUE 1
 
+#include "../include/threading.h"
 #include "../include/directory_traversal.h"
 #include <stdlib.h>
+#include <pthread.h>
 
 
-void worker(TaskQueue *queue, FilterFunc filters[], int filterCount, Argument *argument){
+void* worker(void *input){
+
+  WorkerArgument *arg=(WorkerArgument*) input;
+  TaskQueue *queue= arg->queue;
+
   while (TRUE) {
     Task current=popTask(queue);
     
@@ -19,11 +25,11 @@ void worker(TaskQueue *queue, FilterFunc filters[], int filterCount, Argument *a
     traverseDirectory(current.targetList,
                          current.directory,
                          queue,
-                         filters,
-                         filterCount,
-                         argument);
+                         arg->filters,
+                         arg->filterCount,
+                         arg->argument);
 
-    free(current.directory);
+    free(current.directory); //da sich in der queue nicht darum gekümmert wird
 
     threadStoppedWorking(queue);
 
@@ -31,4 +37,5 @@ void worker(TaskQueue *queue, FilterFunc filters[], int filterCount, Argument *a
       pushTask(queue, NULL, NULL);
     }
   }
+  pthread_exit(NULL);
 }

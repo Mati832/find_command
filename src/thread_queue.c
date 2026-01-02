@@ -83,3 +83,17 @@ void threadStoppedWorking(TaskQueue *queue){
   queue->activeThreads--;
   sem_post(&queue->mutex);
 }
+
+void freeQueue(TaskQueue *queue){
+  Task *current=queue->start;
+  while (current!=NULL){
+    Task *temp=current->next;
+    if (current->directory != NULL){
+      free(current->directory);
+    }
+    free(current);
+    current=temp;
+  }
+  sem_destroy(&queue->mutex);
+  sem_destroy(&queue->taskCount);
+}

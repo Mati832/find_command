@@ -3,6 +3,7 @@
 #include "../include/directory_traversal.h"
 #include "../include/thread_queue.h"
 #include "../include/threading.h"
+#include <pthread.h>
 #include <stdio.h>
 
 void printArguments(int argc, char **argv);
@@ -12,28 +13,43 @@ void printNodes(Node *current);
 
 int main(int argc, char **argv)
 {
-  FileList result;
-  initList(&result);
-  
+
+
   Argument arg;
   parseArguments(&arg, argc, argv);
 
   FilterFunc activeFilters[5];
-  int filterCount = 0;
-
-  if (arg.namePattern != NULL) {
-    activeFilters[filterCount] = nameFilter;
-    filterCount++;
-  }
-  if (arg.type != '\0') {
-    activeFilters[filterCount] = typeFilter;
-    filterCount++;
-  }
+  int filterCount = initFilter(activeFilters, &arg);
+  
+  FileList result;
+  initList(&result);
+  
   TaskQueue queue;
   initQueue(&queue);
   pushTask(&queue, arg.startPath, &result);
-  worker(&queue, activeFilters, filterCount, &arg);
-  printList(&result); 
+  
+  WorkerArgument work;
+  work.queue=&queue;
+  work.filters=activeFilters;
+  work.filterCount=filterCount;
+  work.argument=&arg;
+
+  int numThreads=4;
+  pthread_t threads[numThreads];
+  for (int i=0; i<numThreads;i++) {
+    pthread_create(&threads[i], NULL, worker, (void*)&work);
+  }
+  for (int i=0; i<numThreads;i++) {
+    pthread_join(threads[i],NULL);
+  }
+
+
+  printList(&result);
+  
+  freeList(&result);
+  freeQueue(&queue);
+
+
   return 0;
 }
 

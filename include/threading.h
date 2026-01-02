@@ -5,10 +5,15 @@
 #include "filter.h"
 #include "arguments.h"
 
-void worker(TaskQueue *queue, 
-          FilterFunc filters[], 
-          int filterCount, 
-          Argument *argument);
+
+typedef struct{
+  TaskQueue *queue;
+  FilterFunc *filters;
+  int filterCount;
+  Argument *argument;
+}WorkerArgument;
+
+void* worker(void *arg);
 
 #endif 
 
