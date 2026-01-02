@@ -11,7 +11,6 @@ void parseArguments(Argument *argument, int argc, char **argv){
   argument->startPath = ".";
   argument->namePattern = NULL;
   argument->type = '\0';
-  argument->filterCondition = NULL;
   argument->recursive = FALSE;
 
   
@@ -23,10 +22,6 @@ void parseArguments(Argument *argument, int argc, char **argv){
     else if( (i+1)<argc && strcmp(argv[i], "-type") == 0 ){
       i++;
       argument->type=*argv[i];
-    }
-    else if( (i+1)<argc && strcmp(argv[i], "-filter") == 0 ){
-      i++;
-      argument->filterCondition=argv[i];
     }
     else if( strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "-R") == 0){
       argument->recursive=TRUE;
