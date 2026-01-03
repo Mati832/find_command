@@ -16,5 +16,5 @@ int typeFilter(const struct dirent *entry, const Argument *argument);
 int nameFilter(const struct dirent *entry, const Argument *argument);
 
 int dotFilter(const struct dirent *entry);
-
+int sizeFilter(const struct dirent *entry, const Argument *argument);
 #endif
