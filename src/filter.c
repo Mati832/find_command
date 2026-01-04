@@ -1,6 +1,8 @@
 
 #include "../include/filter.h"
-
+#include <sys/stat.h>
+#include <limits.h>
+#include <stdio.h>
 #include <fnmatch.h>
 #include <string.h>
 
@@ -19,6 +21,9 @@ int initFilter(FilterFunc filters[], Argument *arg){
     filters[filterCount] = typeFilter;
     filterCount++;
   }
+  if (arg->sizeOp != 0)
+    filters[filterCount++] = sizeFilter;
+
   return filterCount;
 }
 //only applies lambda-able filter
@@ -56,4 +61,34 @@ int dotFilter(const struct dirent *entry){
     return TRUE;
   }
   return FALSE;
+}
+
+int sizeFilter(const struct dirent *entry, const Argument *arg)
+{
+    struct stat st;
+    char fullPath[PATH_MAX];
+
+    /* entry->d_name sadece isimdir */
+    snprintf(fullPath, PATH_MAX, "%s/%s",
+             arg->startPath, entry->d_name);
+
+    if (stat(fullPath, &st) != 0) {
+        return 0;
+    }
+
+    /* Directory’ler ASLA elenmez (recursive bozulmasın diye) */
+    if (!S_ISREG(st.st_mode)) {
+        return 1;
+    }
+
+    if (arg->sizeOp == '+')
+        return st.st_size > arg->sizeValue;
+
+    if (arg->sizeOp == '-')
+        return st.st_size < arg->sizeValue;
+
+    if (arg->sizeOp == '=')
+        return st.st_size == arg->sizeValue;
+
+    return 1;
 }

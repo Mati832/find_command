@@ -4,6 +4,7 @@
 
 #include "../include/arguments.h"
 
+#include <stdlib.h> 
 #include <string.h>
 
 
@@ -12,6 +13,10 @@ void parseArguments(Argument *argument, int argc, char **argv){
   argument->namePattern = NULL;
   argument->type = '\0';
   argument->recursive = FALSE;
+
+  /*-size default*/
+  argument->sizeOp = 0;
+  argument->sizeValue = 0;
 
   
   for (int i=1;i<argc;i++) {
@@ -23,6 +28,17 @@ void parseArguments(Argument *argument, int argc, char **argv){
       i++;
       argument->type=*argv[i];
     }
+     else if ((i + 1) < argc && strcmp(argv[i], "-size") == 0) {
+            char *value = argv[++i];
+
+            if (value[0] == '+' || value[0] == '-') {
+                argument->sizeOp = value[0];
+                argument->sizeValue = atol(value + 1);
+            } else {
+                argument->sizeOp = '=';
+                argument->sizeValue = atol(value);
+            }
+        }
     else if( strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "-R") == 0){
       argument->recursive=TRUE;
     }

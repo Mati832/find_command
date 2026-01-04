@@ -10,6 +10,9 @@ typedef struct{
   char type;
   char *filterCondition;
   int recursive;
+
+  char sizeOp;     
+  long sizeValue;  
 }Argument;
 
 void parseArguments(Argument *argument, int argc, char **argv);
