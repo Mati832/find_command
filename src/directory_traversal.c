@@ -27,30 +27,38 @@ void traverseDirectory(FileList *result
     return;
   }
 
-  while ( (entry=readdir(dir)) != NULL){
+ while ((entry = readdir(dir)) != NULL) {
 
-    if(dotFilter(entry)){ continue; }
-    int entryMatches=applyFilter(entry, filters, filterCount, argument);
+    if (dotFilter(entry)) { continue; }
 
     char fullPath[PATH_MAX];
-    snprintf(fullPath, sizeof(fullPath), "%s/%s",startPath,entry->d_name);
+    snprintf(fullPath, sizeof(fullPath), "%s/%s", startPath, entry->d_name);
 
-    if(entry->d_type == DT_DIR){
-      Node *newNode=NULL;
-      if(entryMatches) { newNode=addFile(result, fullPath, NODE_DIR); }     
+    struct dirent fakeEntry = *entry;
+    strncpy(fakeEntry.d_name, fullPath, sizeof(fakeEntry.d_name)-1);
+    fakeEntry.d_name[sizeof(fakeEntry.d_name)-1] = '\0';
 
-      if(argument->recursive) { 
-        if(newNode == NULL){
-          pushTask(queue, fullPath, result);
+    int entryMatches = applyFilter(&fakeEntry, filters, filterCount, argument);
+
+    if (entry->d_type == DT_DIR) {
+        Node *newNode = NULL;
+
+        if (entryMatches) {
+            newNode = addFile(result, fullPath, NODE_DIR);
         }
-        else{
-          pushTask(queue, fullPath, newNode->content);
+
+        if (argument->recursive) {
+            if (newNode == NULL) {
+                pushTask(queue, fullPath, result);
+            } else {
+                pushTask(queue, fullPath, newNode->content);
+            }
         }
-      }
+    } else {
+        if (entryMatches) {
+            addFile(result, fullPath, NODE_FILE);
+        }
     }
-    else{
-      if(entryMatches) {addFile(result, fullPath, NODE_FILE);}
-    }
-  }
-  closedir(dir);
 }
+  closedir(dir);
+  }
