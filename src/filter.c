@@ -27,33 +27,39 @@ int initFilter(FilterFunc filters[], Argument *arg){
   return filterCount;
 }
 //only applies lambda-able filter
-int applyFilter(const struct dirent *entry, FilterFunc filters[], int filterCount, const Argument *argument){
+int applyFilter(const char *fullPath ,const struct stat *st, FilterFunc filters[], int filterCount, const Argument *argument){
 
   int matches=TRUE;
   for (int i=0; i<filterCount; i++) {
-    matches=filters[i](entry, argument);
+    matches=filters[i](fullPath, st, argument);
     if(!matches)break;
   }
   return matches;
 }
 
 //lambda-able
-int typeFilter(const struct dirent *entry, const Argument *argument) {
-    if (argument->type == 'd' && entry->d_type == DT_DIR) {
+int typeFilter(const char *fullPath, const struct stat *st, const Argument *argument) {
+    (void)fullPath;
+    if (argument->type == 'd' && S_ISDIR(st->st_mode)) {
         return TRUE;
     }
-    if (argument->type == 'f' && entry->d_type == DT_REG) {
+    if (argument->type == 'f' && S_ISREG(st->st_mode)) {
         return TRUE;
     }
     return FALSE;
 }
 //lambda-able
-int nameFilter(const struct dirent *entry, const Argument *argument) {
-    if (fnmatch(argument->namePattern, entry->d_name, 0) == 0) {
-        return TRUE;
-    }
+int nameFilter(const char *fullPath, const struct stat *st, const Argument *argument) {
+  (void)st;
 
-    return FALSE;
+  char *temp = strrchr(fullPath, '/');
+    
+  const char *fileName = (temp == NULL) ? fullPath : temp + 1;
+
+  if (fnmatch(argument->namePattern, fileName, 0) == 0) {
+    return TRUE;
+  }
+  return FALSE;
 }
 //not lambda-able
 int dotFilter(const struct dirent *entry){
@@ -63,30 +69,22 @@ int dotFilter(const struct dirent *entry){
   return FALSE;
 }
 
-int sizeFilter(const struct dirent *entry, const Argument *arg)
+int sizeFilter(const char *fullPath, const struct stat *st, const Argument *arg)
 {
-    struct stat st;
-    char fullPath[PATH_MAX];
-
-    snprintf(fullPath, PATH_MAX, "%s", entry->d_name);
-
-
-    if (stat(fullPath, &st) != 0) {
-        return 0;
-    }
-
-    if (!S_ISREG(st.st_mode)) {
-        return 1;
+    (void)fullPath;
+    
+    if (!S_ISREG(st->st_mode)) {
+        return FALSE;
     }
 
     if (arg->sizeOp == '+')
-        return st.st_size > arg->sizeValue;
+        return st->st_size > arg->sizeValue;
 
     if (arg->sizeOp == '-')
-        return st.st_size < arg->sizeValue;
+        return st->st_size < arg->sizeValue;
 
     if (arg->sizeOp == '=')
-        return st.st_size == arg->sizeValue;
-
-    return 1;
+        return st->st_size == arg->sizeValue;
+  
+    return FALSE;
 }

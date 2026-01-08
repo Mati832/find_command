@@ -33,19 +33,16 @@ while ((entry = readdir(dir)) != NULL) {
 
     char fullPath[PATH_MAX];
     snprintf(fullPath, sizeof(fullPath), "%s/%s", startPath, entry->d_name);
-    // Build full path for the current directory entry
+    struct stat st;
 
-    struct dirent fakeEntry = *entry;
-    // Create a local copy of dirent to avoid modifying the original entry
+    if(lstat(fullPath, &st) == -1){
+      fprintf(stderr, "Cannot access '%s': %s\n", fullPath, strerror(errno));
+      continue;
+    }
 
-    strncpy(fakeEntry.d_name, fullPath, sizeof(fakeEntry.d_name) - 1);
-    fakeEntry.d_name[sizeof(fakeEntry.d_name) - 1] = '\0';
-    // Replace d_name with full path so filters can use stat() correctly
+    int entryMatches = applyFilter(fullPath, &st, filters, filterCount, argument);
 
-    int entryMatches = applyFilter(&fakeEntry, filters, filterCount, argument);
-    // Apply filters using the full path (required for -size)
-
-    if (entry->d_type == DT_DIR) {
+    if (S_ISDIR(st.st_mode)) {
         Node *newNode = NULL;
 
         if (entryMatches) {
@@ -62,11 +59,10 @@ while ((entry = readdir(dir)) != NULL) {
                 // Traverse directory and attach its content to the directory node
             }
         }
-    } else {
-        if (entryMatches) {
-            addFile(result, fullPath, NODE_FILE);
+    }
+    else if(entryMatches && S_ISREG(st.st_mode)){
+      addFile(result, fullPath, NODE_FILE);
             // Add regular file only if it passes all active filters
-        }
     }
 }
   closedir(dir);
