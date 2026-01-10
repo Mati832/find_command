@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <fnmatch.h>
 #include <string.h>
+#include <time.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -88,3 +89,31 @@ int sizeFilter(const char *fullPath, const struct stat *st, const Argument *arg)
   
     return FALSE;
 }
+
+int mtimeFilter(const char *fullPath,
+                const struct stat *st,
+                const Argument *argument)
+{
+    if (!argument->useMtime)
+        return 1;
+
+    time_t now = time(NULL);
+
+    // second
+    double diffSeconds = difftime(now, st->st_mtime);
+
+    // day
+    long diffDays = diffSeconds / (60 * 60 * 24);
+
+    switch (argument->mtimeOp) {
+        case '+':
+            return diffDays > argument->mtimeValue;
+        case '-':
+            return diffDays < argument->mtimeValue;
+        case '=':
+        default:
+            return diffDays == argument->mtimeValue;
+    }
+}
+
+
