@@ -10,6 +10,9 @@ typedef struct{
   char type;
   char *filterCondition;
   int recursive;
+  char mtimeOp;     // for '+', '-', '='
+  long mtimeValue;  // in days
+  int useMtime;     // Was mtime used by the user?
 
   char sizeOp;     
   long sizeValue;  
