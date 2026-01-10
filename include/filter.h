@@ -17,4 +17,8 @@ int nameFilter(const char *fullPath, const struct stat *st, const Argument *argu
 
 int dotFilter(const struct dirent *entry);
 int sizeFilter(const char *fullPath, const struct stat *st, const Argument *argument);
+
+int mtimeFilter(const char *fullPath, const struct stat *st, const Argument *argument);
+
+
 #endif
