@@ -22,8 +22,13 @@ int initFilter(FilterFunc filters[], Argument *arg){
     filters[filterCount] = typeFilter;
     filterCount++;
   }
-  if (arg->sizeOp != 0)
+  if (arg->sizeOp != 0) {
     filters[filterCount++] = sizeFilter;
+  }
+  if (arg->useMtime) {
+    filters[count++] = mtimeFilter;
+  }
+
 
   return filterCount;
 }
