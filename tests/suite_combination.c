@@ -52,7 +52,6 @@ void run_combination_tests() {
     // TEST 5: Negativ-Test (Keine Treffer trotz Rekursion)
     // Prüft, ob das Programm korrekt "0" zurückgibt, wenn die Kombination unmöglich ist.
     char* t5[] = {"findClone", "test_root", "-name", "*.pdf", "-type", "d", "-r"};
-    const char* exp5[] = {0}; 
     run_test_case("No Matches (PDF as Dir)", 7, t5, 0, NULL);
 
 }
