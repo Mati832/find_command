@@ -17,24 +17,26 @@ void parseArguments(Argument *argument, int argc, char **argv){
   /*-size default*/
   argument->sizeOp = 0;
   argument->sizeValue = 0;
-
+  //-mtime
+  argument->useMtime=FALSE;
   
   for (int i=1;i<argc;i++) {
     
     if (strcmp(argv[i], "-mtime") == 0 && i + 1 < argc) {
     argument->useMtime = 1;
-
-    char *val = argv[i + 1];
+    i++;
+    char *val = argv[i];
 
     if (val[0] == '+' || val[0] == '-' || val[0] == '=') {
         argument->mtimeOp = val[0];
         argument->mtimeValue = atol(val + 1);
-    } else {
+    } 
+    else {
         argument->mtimeOp = '=';
         argument->mtimeValue = atol(val);
     }
-    i++;
-    }    
+}
+
     if( (i+1)<argc && strcmp(argv[i], "-name") == 0 ){
       i++;
       argument->namePattern=argv[i];

@@ -26,7 +26,7 @@ int initFilter(FilterFunc filters[], Argument *arg){
     filters[filterCount++] = sizeFilter;
   }
   if (arg->useMtime) {
-    filters[count++] = mtimeFilter;
+    filters[filterCount++] = mtimeFilter;
   }
 
 
@@ -99,8 +99,7 @@ int mtimeFilter(const char *fullPath,
                 const struct stat *st,
                 const Argument *argument)
 {
-    if (!argument->useMtime)
-        return 1;
+    (void) fullPath;
 
     time_t now = time(NULL);
 
