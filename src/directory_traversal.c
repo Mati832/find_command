@@ -53,10 +53,10 @@ while ((entry = readdir(dir)) != NULL) {
         if (argument->recursive) {
             if (newNode == NULL) {
                 pushTask(queue, fullPath, result);
-                // Traverse directory even if it was not added to the result list
+                // Save the results flat in the result list
             } else {
                 pushTask(queue, fullPath, newNode->content);
-                // Traverse directory and attach its content to the directory node
+                // save the results in the directorys(newNode)list
             }
         }
     }

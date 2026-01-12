@@ -29,7 +29,7 @@ void* worker(void *input){
                          arg->filterCount,
                          arg->argument);
 
-    free(current.directory); //da sich in der queue nicht darum gekümmert wird
+    free(current.directory); //wird sicherheitshalber auch durch freequeue in der main gemacht/überprüft
 
     threadStoppedWorking(queue);
 

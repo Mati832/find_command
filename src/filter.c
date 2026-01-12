@@ -10,7 +10,7 @@
 #define TRUE 1
 #define FALSE 0
 
-//only inits lambda-able filter
+//only inits FilterFunc-able filter
 int initFilter(FilterFunc filters[], Argument *arg){
   int filterCount = 0;
 
@@ -32,7 +32,7 @@ int initFilter(FilterFunc filters[], Argument *arg){
 
   return filterCount;
 }
-//only applies lambda-able filter
+//only applies FilterFunc-able filter
 int applyFilter(const char *fullPath ,const struct stat *st, FilterFunc filters[], int filterCount, const Argument *argument){
 
   int matches=TRUE;
@@ -43,7 +43,7 @@ int applyFilter(const char *fullPath ,const struct stat *st, FilterFunc filters[
   return matches;
 }
 
-//lambda-able
+//FilterFunc-able
 int typeFilter(const char *fullPath, const struct stat *st, const Argument *argument) {
     (void)fullPath;
     if (argument->type == 'd' && S_ISDIR(st->st_mode)) {
@@ -54,7 +54,7 @@ int typeFilter(const char *fullPath, const struct stat *st, const Argument *argu
     }
     return FALSE;
 }
-//lambda-able
+//FilterFunc-able
 int nameFilter(const char *fullPath, const struct stat *st, const Argument *argument) {
   (void)st;
 
@@ -67,14 +67,14 @@ int nameFilter(const char *fullPath, const struct stat *st, const Argument *argu
   }
   return FALSE;
 }
-//not lambda-able
+//not FilterFunc-able
 int dotFilter(const struct dirent *entry){
   if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
     return TRUE;
   }
   return FALSE;
 }
-
+//FilterFunc-able
 int sizeFilter(const char *fullPath, const struct stat *st, const Argument *arg)
 {
     (void)fullPath;
@@ -94,7 +94,7 @@ int sizeFilter(const char *fullPath, const struct stat *st, const Argument *arg)
   
     return FALSE;
 }
-
+//FilterFunc-able
 int mtimeFilter(const char *fullPath,
                 const struct stat *st,
                 const Argument *argument)

@@ -27,7 +27,7 @@ void parseArguments(Argument *argument, int argc, char **argv){
   
   for (int i=1;i<argc;i++) {
 
-
+    //error handling
     if (strcmp(argv[i], "-name") == 0 || strcmp(argv[i], "-type") == 0 || 
         strcmp(argv[i], "-size") == 0 || strcmp(argv[i], "-mtime") == 0) {
         if (i + 1 >= argc) {
@@ -35,13 +35,13 @@ void parseArguments(Argument *argument, int argc, char **argv){
             usage(argv[0]);
             }
         }
-
     
-
+    //-name Argument
     if( (i+1)<argc && strcmp(argv[i], "-name") == 0 ){
       i++;
       argument->namePattern=argv[i];
     }
+    //-type Argument
     else if( (i+1)<argc && strcmp(argv[i], "-type") == 0 ){
       i++;
       char t = *argv[i];
@@ -51,6 +51,7 @@ void parseArguments(Argument *argument, int argc, char **argv){
       }
       argument->type=t;
     }
+    //-size Argument
     else if ((i + 1) < argc && strcmp(argv[i], "-size") == 0) {
             char *value = argv[++i];
 
@@ -62,9 +63,11 @@ void parseArguments(Argument *argument, int argc, char **argv){
                 argument->sizeValue = atol(value);
             }
     }
+    //-r Argument
     else if( strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "-R") == 0){
       argument->recursive=TRUE;
     }
+    //-mtime Argument
     else if (strcmp(argv[i], "-mtime") == 0 && i + 1 < argc) {
         argument->useMtime = 1;
         i++;
@@ -79,9 +82,11 @@ void parseArguments(Argument *argument, int argc, char **argv){
             argument->mtimeValue = atol(val);
         }
     }
+    //startPath Argument
     else if(i==1){
       argument->startPath=argv[i];
     }
+    //error handling
     else{
         fprintf(stderr, "Error: Unknown argument '%s'.\n", argv[i]);
         usage(argv[0]);

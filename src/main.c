@@ -20,12 +20,11 @@ int main(int argc, char **argv)
   FilterFunc activeFilters[5];
   int filterCount = initFilter(activeFilters, &arg);
   
-  FileList result;
-  initList(&result);
+  FileList result; initList(&result);
   
-  TaskQueue queue;
-  initQueue(&queue);
+  TaskQueue queue; initQueue(&queue);
 
+  //check if from pipeline
   if (!isatty(STDIN_FILENO)) {
     char startPath[PATH_MAX];
     while (fgets(startPath, sizeof(startPath), stdin)) {
