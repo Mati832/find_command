@@ -18,6 +18,9 @@ typedef struct{
   long sizeValue;  
 }Argument;
 
+
+void usage(const char *progName);
+
 void parseArguments(Argument *argument, int argc, char **argv);
 
 #endif
