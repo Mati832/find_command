@@ -1,5 +1,5 @@
 #include <string.h>
-
+#include <stdio.h>
 
 void format_size_dynamic(long bytes, char *output) {
     const char *units[] = {"B", "K", "M", "G", "T"};
