@@ -35,4 +35,6 @@ void freeList(FileList *list);
 
 void printList(FileList *list);
 
+void printHumanReadableList(FileList *list);
+
 #endif

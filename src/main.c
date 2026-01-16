@@ -55,8 +55,12 @@ int main(int argc, char **argv)
     pthread_join(threads[i],NULL);
   }
 
-
-  printList(&result);
+  if(arg.humanReadable){
+    printHumanReadableList(&result);
+  }
+  else{
+    printList(&result);
+  }
   
   freeList(&result);
   freeQueue(&queue);

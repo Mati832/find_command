@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 void usage(const char *progName) {
-    fprintf(stderr, "Usage: %s [path] [-name pattern] [-type f|d] [-size [+|-|=]value] [-mtime [+|-|=]value] [-r]\n", progName);
+    fprintf(stderr, "Usage: %s [path] [-name pattern] [-type f|d] [-size [+|-|=]value] [-mtime [+|-|=]value] [-r] [-h]\n", progName);
     exit(EXIT_FAILURE);
 }
 
@@ -18,7 +18,7 @@ void parseArguments(Argument *argument, int argc, char **argv){
   argument->namePattern = NULL;
   argument->type = '\0';
   argument->recursive = FALSE;
-
+  argument->humanReadable = FALSE;
   /*-size default*/
   argument->sizeOp = 0;
   argument->sizeValue = 0;
@@ -81,6 +81,10 @@ void parseArguments(Argument *argument, int argc, char **argv){
             argument->mtimeOp = '=';
             argument->mtimeValue = atol(val);
         }
+    }
+    //-h Argument
+    else if( strcmp(argv[i], "-h") == 0 ){
+      argument->humanReadable=TRUE;
     }
     //startPath Argument
     else if(i==1){

@@ -1,9 +1,11 @@
 #include "../include/file_list.h"
-
+#include "../include/utils.h"
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
+#include <sys/stat.h>
 
 void initList(FileList *list){
   list->start=NULL;
@@ -75,4 +77,31 @@ void printList(FileList *list){
     if(current->type == NODE_DIR) printList(current->content);
     current=current->next;
   }
+}
+void printHumanReadableList(FileList *list){
+  Node *current = list->start;
+  struct stat st;
+    
+  while (current){
+    if(lstat(current->absolutePath, &st)==0){
+
+      char size[10];
+      format_size_dynamic(st.st_size, size);
+
+      char time[20];
+      struct tm *tm = localtime(&st.st_mtime);
+      strftime(time, sizeof(time), "%b %d %H:%M", tm);
+
+      printf(" %s %s %s\n", size, time, current->absolutePath);
+    }
+    else{
+      printf("??? %s\n", current->absolutePath);
+    }
+    if(current->type == NODE_DIR){
+      printHumanReadableList(current->content);
+    }
+    current=current->next;
+
+  }
+
 }
