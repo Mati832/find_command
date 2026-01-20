@@ -56,4 +56,12 @@ void run_basic_tests() {
       system("mkdir -p test_root/empty_dir");
       char* t8[] = {"findClone", "test_root/empty_dir", "-r"};
       run_test_case("Empty Directory StartPath", 3, t8, 0, NULL);
+
+   //Test 4: Size Filter (files larger than 100 bytes)   
+   char* t_size[] = {"findClone", "test_root", "-size", "+100"};
+    const char* exp_size[] = {"test_root/200Byte.txt"};
+    
+    run_test_case("Size Filter (>100 bytes)", 4, t_size, 1, exp_size);
+
+
 }

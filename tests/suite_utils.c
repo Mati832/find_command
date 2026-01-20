@@ -5,6 +5,20 @@
 #include <sys/stat.h>    
 #include <pthread.h>
 
+
+void create_file_with_content(const char *path, int size_in_bytes) {
+    FILE *f = fopen(path, "w");
+    if (f == NULL) return;
+    
+    for (int i = 0; i < size_in_bytes; i++) {
+        fputc('A', f); // Filling file with 'A's
+    }
+    fclose(f);
+}
+
+
+
+
 void setup_global_test_env() {
     system("rm -rf test_root");
     mkdir("test_root", 0777);
@@ -21,7 +35,9 @@ void setup_global_test_env() {
     system("touch test_root/src/main.c");
     system("touch test_root/src/utils.c");
     system("touch test_root/src/backup/old_main.c");
-    
+
+    create_file_with_content("test_root/10Byte.txt", 10);
+    create_file_with_content("test_root/200Byte.txt", 200);
 }
 
 void validateResult(const char* label, FileList* result, int expected_count, const char** expected_names) {
