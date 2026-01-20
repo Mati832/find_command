@@ -3,7 +3,7 @@
 #define FALSE 0
 
 #include "../include/arguments.h"
-
+#include <errno.h>
 #include <stdlib.h> 
 #include <string.h>
 #include <stdio.h>
@@ -52,17 +52,27 @@ void parseArguments(Argument *argument, int argc, char **argv){
       argument->type=t;
     }
     //-size Argument
-    else if ((i + 1) < argc && strcmp(argv[i], "-size") == 0) {
-            char *value = argv[++i];
-
-            if (value[0] == '+' || value[0] == '-') {
-                argument->sizeOp = value[0];
-                argument->sizeValue = atol(value + 1);
-            } else {
-                argument->sizeOp = '=';
-                argument->sizeValue = atol(value);
-            }
+   else if ((i + 1) < argc && strcmp(argv[i], "-size") == 0) {
+    char *value = argv[++i];
+    char *endptr;
+    
+    // Check for sign
+    if (value[0] == '+' || value[0] == '-') {
+        argument->sizeOp = value[0];
+        value++; // Skip the sign character
+    } else {
+        argument->sizeOp = '=';
     }
+
+    errno = 0;
+    argument->sizeValue = strtol(value, &endptr, 10);
+
+    // Error check: If value is not a number or empty
+    if (errno != 0 || *endptr != '\0' || value == endptr) {
+        fprintf(stderr, "Error: Invalid size value '%s'\n", argv[i]);
+        usage(argv[0]);
+    }
+}
     //-r Argument
     else if( strcmp(argv[i], "-r") == 0 || strcmp(argv[i], "-R") == 0){
       argument->recursive=TRUE;
