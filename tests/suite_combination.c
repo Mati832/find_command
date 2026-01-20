@@ -54,5 +54,49 @@ void run_combination_tests() {
     char* t5[] = {"findClone", "test_root", "-name", "*.pdf", "-type", "d", "-r"};
     run_test_case("No Matches (PDF as Dir)", 7, t5, 0, NULL);
 
+
+    // TEST 6: Name + Size Filter
+    // We search for files containing "Byte" in name AND are larger than 50 bytes.
+    // 10Byte.txt  -> Matches Name, Fails Size (>50)
+    // 200Byte.txt -> Matches Name, Matches Size (>50) -> TARGET
+    
+    char* t6[] = {"findClone", "test_root", "-name", "*Byte*", "-size", "+50"};
+    const char* exp6[] = {"test_root/200Byte.txt"};
+    run_test_case("Combo: Name + Size (>50)", 6, t6, 1, exp6);
+
+    // TEST 7: Name + Mtime Filter
+    // We search for files with "daysago" in name AND are older than 3 days.
+    // 5daysago.txt  (5 days old)  -> Matches Name, Matches Time (>3) -> TARGET
+    // 10daysago.txt (10 days old) -> Matches Name, Matches Time (>3) -> TARGET
+    // today.txt                   -> Fails Name, Fails Time
+    
+    char* t7[] = {"findClone", "test_root", "-name", "*daysago*", "-mtime", "+3"};
+    const char* exp7[] = {
+        "test_root/5daysago.txt",
+        "test_root/10daysago.txt"
+    };
+    run_test_case("Combo: Name + Time (>3 days)", 6, t7, 2, exp7);
+
+
+
+    // TEST 8: Size + Recursion
+    // Find all files larger than 5 bytes in the whole tree.
+    // Only 10Byte.txt and 200Byte.txt have content. Others are 0 bytes.
+    
+    char* t8[] = {"findClone", "test_root", "-size", "+5", "-r"};
+    const char* exp8[] = {
+        "test_root/10Byte.txt",
+        "test_root/200Byte.txt"
+    };
+    run_test_case("Combo: Size + Rec (>5 bytes)", 5, t8, 2, exp8);
+
+    
+    // TEST 9: Name + Mtime Filter (Impossible Case)
+    // Find a file that is "today.txt" BUT is older than 2 days.
+    // Should return NOTHING.
+    
+    char* t9[] = {"findClone", "test_root", "-name", "today.txt", "-mtime", "+2"};
+    run_test_case("Combo: Impossible Time", 6, t9, 0, NULL);
+
 }
 
