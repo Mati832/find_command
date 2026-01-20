@@ -5,6 +5,8 @@
 #include <sys/stat.h>    
 #include <pthread.h>
 
+#include <utime.h> // to manupulate file modification times
+#include <time.h>
 
 void create_file_with_content(const char *path, int size_in_bytes) {
     FILE *f = fopen(path, "w");
@@ -14,6 +16,21 @@ void create_file_with_content(const char *path, int size_in_bytes) {
         fputc('A', f); // Filling file with 'A's
     }
     fclose(f);
+}
+
+void set_file_age(const char *path, int days) {
+    struct utimbuf new_times;
+    time_t now = time(NULL);
+    
+    // Calculate the past time
+    time_t old_time = now - (days * 24 * 60 * 60);
+
+    new_times.actime = old_time;  // Zugriffszeit (atime)
+    new_times.modtime = old_time; // Modifikationszeit (mtime)
+
+    if (utime(path, &new_times) != 0) {
+        perror("Error changing file time");
+    }
 }
 
 
@@ -38,6 +55,17 @@ void setup_global_test_env() {
 
     create_file_with_content("test_root/10Byte.txt", 10);
     create_file_with_content("test_root/200Byte.txt", 200);
+
+
+
+    system("touch test_root/today.txt");
+    
+   
+    system("touch test_root/5daysago.txt");
+    set_file_age("test_root/5daysago.txt", 5);
+
+    system("touch test_root/10daysago.txt");
+    set_file_age("test_root/10daysago.txt", 10);
 }
 
 void validateResult(const char* label, FileList* result, int expected_count, const char** expected_names) {

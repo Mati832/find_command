@@ -63,5 +63,13 @@ void run_basic_tests() {
     
     run_test_case("Size Filter (>100 bytes)", 4, t_size, 1, exp_size);
 
+    //Test 5: Modification Time Filter
+    char* t_mtime[] = {"findClone", "test_root", "-mtime", "+3"};
+    const char* exp_mtime[] = {
+        "test_root/5daysago.txt",
+        "test_root/10daysago.txt"
+    };
+
+    run_test_case("Mtime Filter (>3 days)", 4, t_mtime, 2, exp_mtime);
 
 }
