@@ -53,6 +53,24 @@ A multithreaded file search tool implementing a subset of the Linux `find` comma
 
 ---
 
+## Pipeline Usage (stdin)
+
+In addition to providing a start path as a command-line argument, the program also supports
+input via **pipelines**.
+
+If input is provided via a pipeline, the program expects **one path per line**.
+For each line, the search begins in the specified directory and applies the same filters
+and options as usual.
+
+### Example
+
+```bash
+* echo "/var/log" | ./findClone -name "*.log" -r
+
+* cat paths.txt | ./findClone -type d
+
+---
+
 ## Build Instructions
 
 * **Compile**
