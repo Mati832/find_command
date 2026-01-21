@@ -64,10 +64,12 @@ and options as usual.
 
 ### Example
 
-```bash
-* echo "/var/log" | ./findClone -name "*.log" -r
 
-* cat paths.txt | ./findClone -type d
+```bash
+echo "/var/log" | ./findClone -name "*.log" -r
+
+cat paths.txt | ./findClone -type d
+```
 
 ---
 
