@@ -1,5 +1,3 @@
----
-
 # find_command
 
 A multithreaded file search tool implementing a subset of the Linux `find` command.
@@ -83,22 +81,22 @@ This project was developed with the support of AI tools. The following tasks wer
 
 ### Assisted Areas
 
-* **Structure**
+* **Structure:**
   Generated a first rough structure to provide an overview of how the structure could look like.
 
-* **Build System**
+* **Build System:**
   Generated the Makefile.
 
-* **Testing**
+* **Testing:**
   Generated some test cases.
 
-* **Debugging**
+* **Debugging:**
   Provided assistance for resolving errors.
 
-* **Documentation**
+* **Documentation:**
   Formatted the final README for better readability.
 
-* **General Guidance**
+* **General Guidance:**
   Answered technical questions regarding:
 
   * Implementation of stdin for path input
