@@ -99,8 +99,8 @@ This project was developed with the support of AI tools. The following tasks wer
 * **General Guidance:**
   Answered technical questions regarding:
 
-  * Implementation of stdin for path input
-  * Unit testing strategies in C
+  * Implementation of stdin for pipelines
+  * Testing strategies in C
   * Mechanics of function pointers for filter logic
   * Explanation of `errno` and Linux File API metadata (`stat` / `lstat`)
 
